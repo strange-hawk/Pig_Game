@@ -1,50 +1,30 @@
 // in a function call this call refers to the window
 // in a method call which is a function attached to an object, this key refers to the object
 
-var scores,roundscore, dice1,dice2,activeplayer,gameplaying,prevval,currval,counter;
+var scores,roundscore, dice,activeplayer,gameplaying,lastval;
 init()
 
 document.querySelector(".btn-roll").addEventListener('click',function(){
     if(gameplaying){
     // 1. random number
-    dice1 = Math.floor(Math.random()*6)+1
-    dice2 = Math.floor(Math.random()*6)+1
+    dice = Math.floor(Math.random()*6)+1
     // 2. display result
-    var diceDOM1 = document.querySelector('.dice1')
-    diceDOM1.style.display = 'block'
-    diceDOM1.src = 'dice-' + dice1+'.png'
-    var diceDOM2 = document.querySelector('.dice2')
-    diceDOM2.style.display = 'block'
-    diceDOM2.src = 'dice-' + dice2+'.png'
-    // document.querySelector('#current-'+activeplayer).textContent  = dice
+    var diceDOM = document.querySelector('.dice')
+    diceDOM.style.display = 'block'
+    diceDOM.src = 'dice-' + dice+'.png'
+    document.querySelector('#current-'+activeplayer).textContent  = dice
 
-    // 3. update the round score if the rolled number is not 1.
-    // if(dice !== 1){
-    //     if(counter===0){
-    //         prevval = dice
-    //         counter++
-    //     }
-    //     else{
-    //         if(prevval===6 && dice===6){
-    //             roundscore=0
-    //             nextplayer()
-    //         }
-    //         else{
-    //             prevval=dice
-    //             roundscore+=dice
-    //             document.getElementById('current-'+activeplayer).textContent = roundscore
-    //             counter++
-    //         }
-    //     }
-    //     // roundscore+=dice
-    //     // document.getElementById('current-'+activeplayer).textContent = roundscore
-    //     // add score
-    // }
-    if(dice1!==1 && dice2!==1){
-        roundscore+= dice1+dice2
-        scores[activeplayer]=roundscore
+    // 3. update the round score if the rolled number is not 1.\
+    if(lastval===6 && dice===6 ){
+        scores[activeplayer]=0
+        document.querySelector('#score-'+activeplayer).textContent='0'
+        roundscore=0
+        nextplayer()
+    }
+    else if(dice !== 1){
+        roundscore+=dice
         document.getElementById('current-'+activeplayer).textContent = roundscore
-
+        // add score
     }
     else{
         // shift the player
@@ -52,6 +32,7 @@ document.querySelector(".btn-roll").addEventListener('click',function(){
         roundscore=0
         nextplayer()
     }
+    lastval=dice
 }
 })
 
@@ -66,7 +47,7 @@ document.querySelector('.btn-hold').addEventListener('click',function(){
     // document.querySelector('.dice').style.display = 'none'
 
 //     // check if player win the game
-    if(scores[activeplayer] >=1000){
+    if(scores[activeplayer] >=20){
         document.querySelector('#name-'+activeplayer).textContent="WINNER"
         document.querySelector('.dice').style.display = 'none'
         document.querySelector('.player-'+activeplayer+'-panel').classList.add('winner')
@@ -92,7 +73,6 @@ function nextplayer(){
     // document.querySelector('.player-1-panel').classList.toggle('active')
         document.querySelector('.player-0-panel').classList.toggle('active')
         document.querySelector('.player-1-panel').classList.toggle('active')
-        counter=0
 }
 
 
@@ -103,8 +83,7 @@ function init(){
     roundscore=0;
     activeplayer=0
     gameplaying=true
-    document.querySelector('.dice1').style.display = 'none'
-    document.querySelector('.dice2').style.display = 'none'
+    document.querySelector('.dice').style.display = 'none'
     document.getElementById('score-0').textContent = '0'
     document.getElementById('score-1').textContent = '0'
     document.getElementById('current-0').textContent = '0'
@@ -116,5 +95,5 @@ function init(){
     document.querySelector('.player-0-panel').classList.remove('active')
     document.querySelector('.player-1-panel').classList.remove('active')
     document.querySelector('.player-0-panel').classList.add('active')
-    counter=0
+
 }
